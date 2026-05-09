@@ -1,6 +1,6 @@
 import { Employee } from "@shared/api";
 
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = "https://employee-hierarchy-backend.vercel.app";
 
 export async function getEmployees(): Promise<Employee[]> {
 
