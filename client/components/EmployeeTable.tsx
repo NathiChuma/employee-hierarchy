@@ -18,14 +18,14 @@ export default function EmployeeTable({
   const formatSalary = (salary: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "ZAR",
       minimumFractionDigits: 0,
     }).format(salary);
   };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
+      year: "2-digit",
       month: "short",
       day: "numeric",
     });
@@ -44,22 +44,22 @@ export default function EmployeeTable({
       <table className="w-full">
         <thead>
           <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase whitespace-nowrap">
               Employee
             </th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
-              Employee #
+            <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase whitespace-nowrap">
+              Emp #
             </th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase whitespace-nowrap">
               Role
             </th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
-              Birth Date
+            <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase whitespace-nowrap">
+              DOB
             </th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
+            <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase whitespace-nowrap">
               Salary
             </th>
-            <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 uppercase">
+            <th className="px-3 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase whitespace-nowrap">
               Actions
             </th>
           </tr>
@@ -83,20 +83,20 @@ export default function EmployeeTable({
                   </div>
                 </div>
               </td>
-              <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+              <td className="px-3 py-4 text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
                 {employee.employeeNumber}
               </td>
-              <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+              <td className="px-4 py-4 text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
                 {employee.role}
               </td>
-              <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+              <td className="px-3 py-4 text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
                 {formatDate(employee.birthDate)}
               </td>
-              <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
+              <td className="px-4 py-4 text-sm font-medium text-gray-900 dark:text-white text-right whitespace-nowrap">
                 {formatSalary(employee.salary)}
               </td>
-              <td className="px-6 py-4">
-                <div className="flex justify-end gap-2">
+              <td className="px-3 py-4">
+                <div className="flex justify-end gap-1">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

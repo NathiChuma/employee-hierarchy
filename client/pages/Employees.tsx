@@ -1,46 +1,30 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Employee } from "@shared/api";
 import { Plus, Search, Filter, Users } from "lucide-react";
 import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeTable from "@/components/EmployeeTable";
 import EmployeeDetails from "@/components/EmployeeDetails";
 import { cn } from "@/lib/utils";
+import { createEmployee, getEmployees, updateEmployee, deleteEmployee } from "@/lib/apis";
 
 export default function Employees() {
-  const [employees, setEmployees] = useState<Employee[]>([
-    {
-      id: "1",
-      firstName: "Sarah",
-      lastName: "Johnson",
-      birthDate: "1985-03-15",
-      employeeNumber: "EMP001",
-      salary: 150000,
-      role: "CEO",
-      email: "sarah.johnson@epiuse.com",
-    },
-    {
-      id: "2",
-      firstName: "Michael",
-      lastName: "Chen",
-      birthDate: "1988-07-22",
-      employeeNumber: "EMP002",
-      salary: 120000,
-      role: "CTO",
-      managerId: "1",
-      email: "michael.chen@epiuse.com",
-    },
-    {
-      id: "3",
-      firstName: "Emma",
-      lastName: "Williams",
-      birthDate: "1990-11-08",
-      employeeNumber: "EMP003",
-      salary: 95000,
-      role: "Senior Engineer",
-      managerId: "2",
-      email: "emma.williams@epiuse.com",
-    },
-  ]);
+
+  const [employees, setEmployees] = useState<Employee[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+
+      const employees = await getEmployees();
+
+      if (employees) {
+        setEmployees(employees);
+      }
+
+    };
+
+    fetchData();
+  }, []);
+
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRole, setFilterRole] = useState("");
@@ -67,20 +51,23 @@ export default function Employees() {
     });
   }, [employees, searchTerm, filterRole]);
 
-  const handleAddEmployee = (formData: Employee) => {
+  const handleAddEmployee = async (formData: Employee) => {
     if (editingId) {
+      await updateEmployee(formData);
       setEmployees((prev) =>
         prev.map((emp) => (emp.id === editingId ? formData : emp))
       );
       setEditingId(null);
     } else {
-      setEmployees((prev) => [...prev, { ...formData, id: Date.now().toString() }]);
+      const employeeData = await createEmployee(formData);
+      setEmployees((prev) => [...prev, employeeData]);
     }
     setShowForm(false);
     setSelectedEmployee(null);
   };
 
-  const handleDeleteEmployee = (id: string) => {
+  const handleDeleteEmployee = async (id: string) => {
+    await deleteEmployee(id);
     setEmployees((prev) => prev.filter((emp) => emp.id !== id));
     setSelectedEmployee(null);
   };

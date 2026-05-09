@@ -2,64 +2,26 @@ import { useState, useMemo } from "react";
 import { Employee } from "@shared/api";
 import { Search, ChevronDown, ChevronRight } from "lucide-react";
 import GravatarAvatar from "@/components/GravatarAvatar";
+import { getEmployees } from "@/lib/apis";
+import { useEffect } from "react";
 
 export default function Hierarchy() {
-  const [employees] = useState<Employee[]>([
-    {
-      id: "1",
-      firstName: "Sarah",
-      lastName: "Johnson",
-      birthDate: "1985-03-15",
-      employeeNumber: "EMP001",
-      salary: 150000,
-      role: "CEO",
-      email: "sarah.johnson@epiuse.com",
-    },
-    {
-      id: "2",
-      firstName: "Michael",
-      lastName: "Chen",
-      birthDate: "1988-07-22",
-      employeeNumber: "EMP002",
-      salary: 120000,
-      role: "CTO",
-      managerId: "1",
-      email: "michael.chen@epiuse.com",
-    },
-    {
-      id: "3",
-      firstName: "Emma",
-      lastName: "Williams",
-      birthDate: "1990-11-08",
-      employeeNumber: "EMP003",
-      salary: 95000,
-      role: "Senior Engineer",
-      managerId: "2",
-      email: "emma.williams@epiuse.com",
-    },
-    {
-      id: "4",
-      firstName: "David",
-      lastName: "Martinez",
-      birthDate: "1987-05-12",
-      employeeNumber: "EMP004",
-      salary: 110000,
-      role: "CFO",
-      managerId: "1",
-      email: "david.martinez@epiuse.com",
-    },
-    {
-      id: "5",
-      firstName: "Lisa",
-      lastName: "Anderson",
-      birthDate: "1992-09-20",
-      employeeNumber: "EMP005",
-      salary: 85000,
-      role: "Accountant",
-      managerId: "4",
-      email: "lisa.anderson@epiuse.com",
-    },
-  ]);
+
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+  
+        const employees = await getEmployees();
+  
+        if (employees) {
+          setEmployees(employees);
+        }
+  
+      };
+  
+      fetchData();
+    }, []);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(

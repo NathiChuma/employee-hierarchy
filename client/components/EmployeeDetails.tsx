@@ -20,7 +20,7 @@ export default function EmployeeDetails({
   const formatSalary = (salary: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "ZAR",
       minimumFractionDigits: 0,
     }).format(salary);
   };
