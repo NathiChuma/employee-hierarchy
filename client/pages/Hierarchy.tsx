@@ -10,7 +10,24 @@ import EmployeeDetails from "@/components/EmployeeDetails";
 export default function Hierarchy() {
   const [employees, setEmployees] = useState<Employee[]>([]);
 
- 
+  useEffect(() => {
+    const fetchData = async () => {
+
+      if (employeesData.length === 0) {
+        await new EmployeesAPIs().getEmployees();
+      }
+
+      const employees = employeesData;
+
+      if (employees) {
+        setEmployees(employees);
+      }
+
+    };
+
+    fetchData();
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(
     new Set(["1"])
