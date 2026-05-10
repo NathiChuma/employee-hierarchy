@@ -20,8 +20,6 @@ export default function Employees() {
 
       const employees = employeesData;
 
-      console.log('Employees from API:', employees);
-
       if (employees) {
         setEmployees(employees);
       }
@@ -30,7 +28,6 @@ export default function Employees() {
 
     fetchData();
   }, []);
-
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRole, setFilterRole] = useState("");

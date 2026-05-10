@@ -1,6 +1,10 @@
+import { useState } from "react";
 import { Employee } from "@shared/api";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import GravatarAvatar from "./GravatarAvatar";
+
+type SortField = "name" | "employeeNumber" | "role" | "birthDate" | "salary";
+type SortDirection = "asc" | "desc";
 
 interface EmployeeTableProps {
   employees: Employee[];
@@ -15,6 +19,9 @@ export default function EmployeeTable({
   onEditEmployee,
   onDeleteEmployee,
 }: EmployeeTableProps) {
+  const [sortField, setSortField] = useState<SortField>("name");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+
   const formatSalary = (salary: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -31,6 +38,58 @@ export default function EmployeeTable({
     });
   };
 
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
+  const sortedEmployees = [...employees].sort((a, b) => {
+    let aVal: any;
+    let bVal: any;
+
+    switch (sortField) {
+      case "name":
+        aVal = `${a.firstName} ${a.lastName}`.toLowerCase();
+        bVal = `${b.firstName} ${b.lastName}`.toLowerCase();
+        break;
+      case "employeeNumber":
+        aVal = a.employeeNumber;
+        bVal = b.employeeNumber;
+        break;
+      case "role":
+        aVal = a.role.toLowerCase();
+        bVal = b.role.toLowerCase();
+        break;
+      case "birthDate":
+        aVal = new Date(a.birthDate).getTime();
+        bVal = new Date(b.birthDate).getTime();
+        break;
+      case "salary":
+        aVal = a.salary;
+        bVal = b.salary;
+        break;
+      default:
+        return 0;
+    }
+
+    if (aVal < bVal) return sortDirection === "asc" ? -1 : 1;
+    if (aVal > bVal) return sortDirection === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  const SortIcon = ({ field }: { field: SortField }) => {
+    if (sortField !== field) return <ArrowUpDown className="h-4 w-4" />;
+    return sortDirection === "asc" ? (
+      <ArrowUp className="h-4 w-4" />
+    ) : (
+      <ArrowDown className="h-4 w-4" />
+    );
+  };
+
   if (employees.length === 0) {
     return (
       <div className="p-12 text-center">
@@ -45,19 +104,49 @@ export default function EmployeeTable({
         <thead>
           <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
             <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase whitespace-nowrap">
-              Employee
+              <button
+                onClick={() => handleSort("name")}
+                className="flex items-center gap-1 hover:text-primary transition-colors"
+              >
+                Employee
+                <SortIcon field="name" />
+              </button>
             </th>
             <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase whitespace-nowrap">
-              Emp #
+              <button
+                onClick={() => handleSort("employeeNumber")}
+                className="flex items-center gap-1 hover:text-primary transition-colors"
+              >
+                Emp #
+                <SortIcon field="employeeNumber" />
+              </button>
             </th>
             <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase whitespace-nowrap">
-              Role
+              <button
+                onClick={() => handleSort("role")}
+                className="flex items-center gap-1 hover:text-primary transition-colors"
+              >
+                Role
+                <SortIcon field="role" />
+              </button>
             </th>
             <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase whitespace-nowrap">
-              DOB
+              <button
+                onClick={() => handleSort("birthDate")}
+                className="flex items-center gap-1 hover:text-primary transition-colors"
+              >
+                DOB
+                <SortIcon field="birthDate" />
+              </button>
             </th>
             <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase whitespace-nowrap">
-              Salary
+              <button
+                onClick={() => handleSort("salary")}
+                className="flex items-center justify-end gap-1 w-full hover:text-primary transition-colors"
+              >
+                Salary
+                <SortIcon field="salary" />
+              </button>
             </th>
             <th className="px-3 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase whitespace-nowrap">
               Actions
@@ -65,7 +154,7 @@ export default function EmployeeTable({
           </tr>
         </thead>
         <tbody>
-          {employees.map((employee, idx) => (
+          {sortedEmployees.map((employee, idx) => (
             <tr
               key={employee.id}
               className={`border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors ${
