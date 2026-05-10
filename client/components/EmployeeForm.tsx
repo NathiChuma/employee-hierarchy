@@ -69,6 +69,8 @@ export default function EmployeeForm({
 
     if (validateForm()) {
       onSubmit(formData);
+    }else{
+      setIsLoading(false);
     }
   };
 
