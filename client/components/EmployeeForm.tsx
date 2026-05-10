@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Employee } from "@shared/api";
-import { X } from "lucide-react";
 
 interface EmployeeFormProps {
   employees: Employee[];
@@ -30,6 +29,11 @@ export default function EmployeeForm({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -40,6 +44,7 @@ export default function EmployeeForm({
       newErrors.employeeNumber = "Employee number is required";
     if (formData.salary <= 0) newErrors.salary = "Salary must be greater than 0";
     if (!formData.role.trim()) newErrors.role = "Role is required";
+    if (!formData.email.trim() || !validateEmail(formData.email)) newErrors.email = "Please enter a valid email address";
 
     // Check for duplicate employee numbers
     if (
@@ -205,8 +210,13 @@ export default function EmployeeForm({
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            className={`w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+              errors.email ? "border-red-500" : "border-gray-300 dark:border-gray-600"
+            }`}
           />
+          {errors.email && (
+            <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+          )}
         </div>
 
         <div>
