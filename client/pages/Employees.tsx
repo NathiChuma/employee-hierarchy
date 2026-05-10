@@ -14,9 +14,9 @@ export default function Employees() {
   useEffect(() => {
     const fetchData = async () => {
 
-      if (employeesData.length === 0) {
+      /*(if (employeesData.length === 0) {
         await new EmployeesAPIs().getEmployees();
-      }
+      }*/
 
       const employees = employeesData;
 
