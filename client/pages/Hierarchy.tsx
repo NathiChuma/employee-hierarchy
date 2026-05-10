@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Employee } from "@shared/api";
 import { Search, ChevronDown, ChevronRight } from "lucide-react";
 import GravatarAvatar from "@/components/GravatarAvatar";
-import { getEmployees } from "@/lib/apis";
+import { EmployeesAPIs, employeesData } from "@/lib/apis";
 import { useEffect } from "react";
 
 export default function Hierarchy() {
@@ -12,7 +12,11 @@ export default function Hierarchy() {
     useEffect(() => {
       const fetchData = async () => {
   
-        const employees = await getEmployees();
+        if (employeesData.length === 0) {
+          await new EmployeesAPIs().getEmployees();
+        }
+
+        const employees = employeesData;
   
         if (employees) {
           setEmployees(employees);

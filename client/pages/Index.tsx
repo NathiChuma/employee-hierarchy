@@ -1,7 +1,21 @@
 import { Link } from "react-router-dom";
-import { Users, GitBranch, ArrowRight, CheckCircle2, Zap, BarChart3 } from "lucide-react";
+import { Users, GitBranch, ArrowRight, BarChart3 } from "lucide-react";
+import { useEffect } from "react";
+import { EmployeesAPIs, employeesData } from "@/lib/apis";
 
 export default function Index() {
+
+  useEffect(() => {
+    const fetchData = async () => {
+  
+      await new EmployeesAPIs().getEmployees();
+  
+    };
+    if (employeesData.length === 0) {
+      fetchData();
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Hero Section */}

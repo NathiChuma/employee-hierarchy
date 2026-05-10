@@ -5,7 +5,7 @@ import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeTable from "@/components/EmployeeTable";
 import EmployeeDetails from "@/components/EmployeeDetails";
 import { cn } from "@/lib/utils";
-import { createEmployee, getEmployees, updateEmployee, deleteEmployee } from "@/lib/apis";
+import { EmployeesAPIs, employeesData } from "@/lib/apis";
 
 export default function Employees() {
 
@@ -14,7 +14,13 @@ export default function Employees() {
   useEffect(() => {
     const fetchData = async () => {
 
-      const employees = await getEmployees();
+      if (employeesData.length === 0) {
+        await new EmployeesAPIs().getEmployees();
+      }
+
+      const employees = employeesData;
+
+      console.log('Employees from API:', employees);
 
       if (employees) {
         setEmployees(employees);
@@ -53,22 +59,20 @@ export default function Employees() {
 
   const handleAddEmployee = async (formData: Employee) => {
     if (editingId) {
-      await updateEmployee(formData);
-      setEmployees((prev) =>
-        prev.map((emp) => (emp.id === editingId ? formData : emp))
-      );
+      await new EmployeesAPIs().updateEmployee(formData);
+      setEmployees(employeesData);
       setEditingId(null);
     } else {
-      const employeeData = await createEmployee(formData);
-      setEmployees((prev) => [...prev, employeeData]);
+      await new EmployeesAPIs().createEmployee(formData);
+      setEmployees(employeesData);
     }
     setShowForm(false);
     setSelectedEmployee(null);
   };
 
   const handleDeleteEmployee = async (id: string) => {
-    await deleteEmployee(id);
-    setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+    await new EmployeesAPIs().deleteEmployee(id);
+    setEmployees(employeesData);
     setSelectedEmployee(null);
   };
 
