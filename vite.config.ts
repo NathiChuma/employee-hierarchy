@@ -13,7 +13,7 @@ export default defineConfig(() => ({
     outDir: "dist",
   },
   plugins: [react(), expressPlugin()],
-  base: "./employees" ,
+  base: "./" ,
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./client"),
