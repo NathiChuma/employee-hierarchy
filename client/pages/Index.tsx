@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Users, GitBranch, ArrowRight, BarChart3 } from "lucide-react";
 import { useEffect } from "react";
-import { EmployeesAPIs, employeesData } from "@/lib/apis";
+import { EmployeesAPIs, employeesData } from "../../shared/api";
 
 export default function Index() {
 

@@ -5,7 +5,7 @@ import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeTable from "@/components/EmployeeTable";
 import EmployeeDetails from "@/components/EmployeeDetails";
 import { cn } from "@/lib/utils";
-import { EmployeesAPIs, employeesData } from "@/lib/apis";
+import { EmployeesAPIs, employeesData } from "../../shared/api";
 
 export default function Employees() {
 

@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Employee } from "@shared/api";
 import { Search, ChevronDown, ChevronRight, Edit2, Trash2  } from "lucide-react";
 import GravatarAvatar from "@/components/GravatarAvatar";
-import { EmployeesAPIs, employeesData } from "@/lib/apis";
+import { EmployeesAPIs, employeesData } from "../../shared/api";
 import { useEffect } from "react";
 import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeDetails from "@/components/EmployeeDetails";
