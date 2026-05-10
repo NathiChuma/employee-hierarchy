@@ -29,7 +29,7 @@ export default function EmployeeForm({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const validateEmail = (email) => {
+  const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
