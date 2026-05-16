@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +25,9 @@ export default function DeleteEmployeeDialog({
   onDelete,
   children
 }: Props) {
+
+  const [isDeleting, setIsDeleting] = useState(false);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -52,9 +56,19 @@ export default function DeleteEmployeeDialog({
 
           <Button
             variant="destructive"
-            onClick={() => onDelete(employeeId)}
+            disabled={isDeleting}
+            onClick={async () => {
+                try {
+                setIsDeleting(true);
+
+                await onDelete(employeeId);
+
+                } finally {
+                setIsDeleting(false);
+                }
+            }}
           >
-            Confirm Delete
+            {isDeleting ? "Deleting..." : "Confirm Delete"}
           </Button>
         </DialogFooter>
       </DialogContent>
