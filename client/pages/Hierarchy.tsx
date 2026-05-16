@@ -6,6 +6,7 @@ import { api, employeesData } from "../../shared/api";
 import { useEffect } from "react";
 import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeDetails from "@/components/EmployeeDetails";
+import DeleteEmployeeDialog from "@/components/DeleteEmployeeDialog";
 
 export default function Hierarchy() {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -183,22 +184,19 @@ export default function Hierarchy() {
                   >
                     <Edit2 className="h-4 w-4" />
                   </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (
-                        window.confirm(
-                          `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
-                        )
-                      ) {
-                        handleDeleteEmployee(employee.id);
-                      }
-                    }}
-                    className="p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex-shrink-0"
-                    title="Delete"
+                  <DeleteEmployeeDialog
+                    employeeId={employee.id}
+                    employeeName={`${employee.firstName} ${employee.lastName}`}
+                    onDelete={handleDeleteEmployee}
                   >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+                    <button
+                      onClick={(e) => e.stopPropagation()}
+                      className="p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex-shrink-0"
+                      title="Delete"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </DeleteEmployeeDialog>
                 </div>
               </div>
             </div>

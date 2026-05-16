@@ -1,12 +1,13 @@
 import { Employee } from "@shared/api";
 import { Edit2, Trash2, Mail, Hash, Briefcase, Cake } from "lucide-react";
 import GravatarAvatar from "./GravatarAvatar";
+import DeleteEmployeeDialog from "./DeleteEmployeeDialog";
 
 interface EmployeeDetailsProps {
   employee: Employee;
   allEmployees: Employee[];
   onEdit: (employee: Employee) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: string) => Promise<void>;
 }
 
 export default function EmployeeDetails({
@@ -171,21 +172,21 @@ export default function EmployeeDetails({
           <Edit2 className="h-4 w-4" />
           Edit
         </button>
-        <button
-          onClick={() => {
-            if (
-              window.confirm(
-                `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
-              )
-            ) {
-              onDelete(employee.id);
-            }
-          }}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg font-medium hover:bg-red-100 transition-colors"
+        <DeleteEmployeeDialog
+          employeeId={employee.id}
+          employeeName={`${employee.firstName} ${employee.lastName}`}
+          onDelete={onDelete}
         >
-          <Trash2 className="h-4 w-4" />
-          Delete
-        </button>
+          <button
+            onClick={(e) => e.stopPropagation()}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg font-medium hover:bg-red-100 transition-colors"
+            title="Delete"
+          >
+            <Trash2 className="h-4 w-4" />
+            Delete
+          </button>
+        </DeleteEmployeeDialog>
+
       </div>
     </div>
   );

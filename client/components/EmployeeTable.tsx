@@ -3,6 +3,8 @@ import { Employee } from "@shared/api";
 import { Edit2, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import GravatarAvatar from "./GravatarAvatar";
 
+import DeleteEmployeeDialog from "./DeleteEmployeeDialog";
+
 type SortField = "name" | "employeeNumber" | "role" | "birthDate" | "salary";
 type SortDirection = "asc" | "desc";
 
@@ -10,7 +12,7 @@ interface EmployeeTableProps {
   employees: Employee[];
   onSelectEmployee: (employee: Employee) => void;
   onEditEmployee: (employee: Employee) => void;
-  onDeleteEmployee: (id: string) => void;
+  onDeleteEmployee: (id: string) => Promise<void>;
 }
 
 export default function EmployeeTable({
@@ -196,22 +198,19 @@ export default function EmployeeTable({
                   >
                     <Edit2 className="h-4 w-4" />
                   </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (
-                        window.confirm(
-                          `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
-                        )
-                      ) {
-                        onDeleteEmployee(employee.id);
-                      }
-                    }}
-                    className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    title="Delete"
+                  <DeleteEmployeeDialog
+                    employeeId={employee.id}
+                    employeeName={`${employee.firstName} ${employee.lastName}`}
+                    onDelete={onDeleteEmployee}
                   >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+                    <button
+                      onClick={(e) => e.stopPropagation()}
+                      className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </DeleteEmployeeDialog>
                 </div>
               </td>
             </tr>
