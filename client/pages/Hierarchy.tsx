@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Employee } from "@shared/api";
 import { Search, ChevronDown, ChevronRight, Edit2, Trash2  } from "lucide-react";
 import GravatarAvatar from "@/components/GravatarAvatar";
-import { EmployeesAPIs, employeesData } from "../../shared/api";
+import { api, employeesData } from "../../shared/api";
 import { useEffect } from "react";
 import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeDetails from "@/components/EmployeeDetails";
@@ -14,7 +14,7 @@ export default function Hierarchy() {
     const fetchData = async () => {
 
       if (employeesData.length === 0) {
-        await new EmployeesAPIs().getEmployees();
+        await api.getEmployees();
       }
 
       const employees = employeesData;
@@ -57,11 +57,11 @@ export default function Hierarchy() {
 
   const handleAddEmployee = async (formData: Employee) => {
     if (editingId) {
-      await new EmployeesAPIs().updateEmployee(formData);
+      await api.updateEmployee(formData);
       setEmployees(employeesData);
       setEditingId(null);
     } else {
-      await new EmployeesAPIs().createEmployee(formData);
+      await api.createEmployee(formData);
       setEmployees(employeesData);
     }
     setShowForm(false);
@@ -69,7 +69,7 @@ export default function Hierarchy() {
   };
 
   const handleDeleteEmployee = async (id: string) => {
-    await new EmployeesAPIs().deleteEmployee(id);
+    await api.deleteEmployee(id);
     setEmployees(employeesData);
     setSelectedEmployee(null);
   };

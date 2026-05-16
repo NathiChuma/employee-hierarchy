@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface GravatarAvatarProps {
@@ -31,18 +30,10 @@ export default function GravatarAvatar({
 
   const getGravatarUrl = (emailAddress: string, sizeInPx: number) => {
     const trimmed = emailAddress.trim().toLowerCase();
-    const hash = btoa(trimmed)
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=/g, "");
-
-    // Use MD5 hash for Gravatar (we'll use a simple approach with btoa for demo)
-    // In production, you'd want to use a proper MD5 library
     const md5Hash = simpleHash(trimmed);
     return `https://www.gravatar.com/avatar/${md5Hash}?s=${sizeInPx}&d=identicon`;
   };
 
-  // Simple hash function for demo purposes
   const simpleHash = (str: string) => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -88,9 +79,7 @@ export default function GravatarAvatar({
           src={gravatarUrl}
           alt={name}
           className="h-full w-full object-cover"
-          onError={() => {
-            // Fallback to initials if image fails to load
-          }}
+          onError={() => {}}
         />
       ) : (
         <div className={cn(bgColor, "h-full w-full flex items-center justify-center")}>

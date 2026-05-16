@@ -1,3 +1,5 @@
+import e from "express";
+
 export interface DemoResponse {
   message: string;
 }
@@ -29,36 +31,38 @@ export interface EmployeeUpdateRequest extends Partial<EmployeeCreateRequest> {
   id: string;
 }
 
-const API_BASE_URL = "https://employee-hierarchy-backend.vercel.app";
-
 export var employeesData: Employee[] = [];
 
-export class EmployeesAPIs {
+class APIClient {
+
+  API_BASE_URL: string;
+
+  constructor() {
+    this.API_BASE_URL = "https://employee-hierarchy-backend.vercel.app";
+  }
 
   async getEmployees(){
 
-    const apiUrl = API_BASE_URL + '/employees/getEmployees';
+    const apiUrl = this.API_BASE_URL + '/employees/getEmployees';
 
-    await fetch(apiUrl, {
+    const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json', // Required for backend to parse JSON
       }
-    })
-    .then(response => response.json())
-    .then(data => {
+    });
 
-      if (data.error == undefined){
-          employeesData = data as Employee[];
-      }
+    if (!response.ok) {
+      throw new Error(
+        'Failed to fetch employees: ' + await response.text()
+      );
+    }
 
-    })
-    .catch(error => console.error('Error:', error));
-
+    employeesData = await response.json() as Employee[];
   }
 
   async createEmployee(employeeData: Employee) {
-    const apiUrl = API_BASE_URL + '/employees/createEmployee';
+    const apiUrl = this.API_BASE_URL + '/employees/createEmployee';
 
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -69,16 +73,17 @@ export class EmployeesAPIs {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to create employee: ' + response.statusText);
+      throw new Error(
+        'Failed to create employee: ' + await response.text()
+      );
     }
 
-    await response.json().then(data => {
-      employeesData.push(data.employee as Employee);
-    });
+    const data = await response.json();
+    employeesData.push(data.employee as Employee);
   }
 
   async updateEmployee(employeeData: Employee) {
-    const apiUrl = API_BASE_URL + '/employees/updateEmployee/' + employeeData.id;
+    const apiUrl = this.API_BASE_URL + '/employees/updateEmployee/' + employeeData.id;
 
     const response = await fetch(apiUrl, {
       method: 'PUT',
@@ -89,27 +94,36 @@ export class EmployeesAPIs {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to update employee: ' + response.statusText);
+      throw new Error(
+        'Failed to update employee: ' + await response.text()
+      );
     }
 
     employeesData = employeesData.map((emp) => (emp.id === employeeData.id ? employeeData : emp));
+
   }
 
   async deleteEmployee(id: string) {
-    const apiUrl = API_BASE_URL + '/employees/deleteEmployee/' + id;
+    const apiUrl = this.API_BASE_URL + '/employees/deleteEmployee/' + id;
 
-      const response = await fetch(apiUrl, {
-          method: 'DELETE',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-      });
+    const response = await fetch(apiUrl, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
 
-      if (!response.ok) {
-          throw new Error('Failed to delete employee: ' + response.statusText);
-      }
+    if (!response.ok) {
+      throw new Error(
+        'Failed to delete employee: ' + await response.text()
+      );
+    }
 
-      employeesData = employeesData.filter((emp) => emp.id !== id);
+    const data = await response.json();
+    employeesData = data.employees as Employee[];
   }
 
 }
+
+// Export a single instance of the EmployeesAPIs class to be used throughout the application
+export const api = new APIClient();

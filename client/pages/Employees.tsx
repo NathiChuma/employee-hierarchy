@@ -5,7 +5,7 @@ import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeTable from "@/components/EmployeeTable";
 import EmployeeDetails from "@/components/EmployeeDetails";
 import { cn } from "@/lib/utils";
-import { EmployeesAPIs, employeesData } from "../../shared/api";
+import { api, employeesData } from "../../shared/api";
 
 export default function Employees() {
 
@@ -15,7 +15,7 @@ export default function Employees() {
     const fetchData = async () => {
 
       if (employeesData.length === 0) {
-        await new EmployeesAPIs().getEmployees();
+        await api.getEmployees();
       }
 
       const employees = employeesData;
@@ -56,11 +56,11 @@ export default function Employees() {
 
   const handleAddEmployee = async (formData: Employee) => {
     if (editingId) {
-      await new EmployeesAPIs().updateEmployee(formData);
+      await api.updateEmployee(formData);
       setEmployees(employeesData);
       setEditingId(null);
     } else {
-      await new EmployeesAPIs().createEmployee(formData);
+      await api.createEmployee(formData);
       setEmployees(employeesData);
     }
     setShowForm(false);
@@ -68,7 +68,7 @@ export default function Employees() {
   };
 
   const handleDeleteEmployee = async (id: string) => {
-    await new EmployeesAPIs().deleteEmployee(id);
+    await api.deleteEmployee(id);
     setEmployees(employeesData);
     setSelectedEmployee(null);
   };

@@ -124,7 +124,7 @@ export default function EmployeeDetails({
                 />
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white text-sm">
-                    {manager.firstName} {manager.lastName}
+                    {manager.firstName} {manager.lastName} ({manager.employeeNumber})
                   </p>
                   <p className="text-xs text-gray-600 dark:text-gray-400">{manager.role}</p>
                 </div>
@@ -150,7 +150,7 @@ export default function EmployeeDetails({
                     />
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white text-sm">
-                        {report.firstName} {report.lastName}
+                        {report.firstName} {report.lastName} ({report.employeeNumber})
                       </p>
                       <p className="text-xs text-gray-600 dark:text-gray-400">{report.role}</p>
                     </div>

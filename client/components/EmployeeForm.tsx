@@ -46,6 +46,19 @@ export default function EmployeeForm({
     if (!formData.role.trim()) newErrors.role = "Role is required";
     if (!formData.email.trim() || !validateEmail(formData.email)) newErrors.email = "Please enter a valid email address";
 
+    //check for duplicate email addresses
+    if (
+      formData.email.trim() &&
+      validateEmail(formData.email) &&
+      employees.some(
+        (emp) =>
+          emp.email === formData.email &&
+          emp.id !== formData.id
+      )
+    ) {
+      newErrors.email = "Email address already exists";
+    }
+
     // Check for duplicate employee numbers
     if (
       employees.some(
@@ -60,6 +73,18 @@ export default function EmployeeForm({
     // Check that employee is not their own manager
     if (formData.managerId && formData.managerId === formData.id) {
       newErrors.managerId = "Employee cannot be their own manager";
+    }
+
+    // Check for circular management (simple check to prevent direct loops)
+    if (formData.managerId) {
+      let manager = employees.find((emp) => emp.id === formData.managerId);
+      while (manager) {
+        if (manager.id === formData.id) {
+          newErrors.managerId = "Circular management relationship detected";
+          break;
+        }
+        manager = employees.find((emp) => emp.id === manager?.managerId);
+      }
     }
 
     setErrors(newErrors);
@@ -242,7 +267,7 @@ export default function EmployeeForm({
               .filter((emp) => emp.id !== formData.id)
               .map((emp) => (
                 <option key={emp.id} value={emp.id}>
-                  {emp.firstName} {emp.lastName}
+                  {emp.firstName} {emp.lastName} ({emp.employeeNumber})
                 </option>
               ))}
           </select>
