@@ -36,7 +36,6 @@ class APIClient {
   API_BASE_URL: string;
 
   constructor() {
-    //this.API_BASE_URL = "http://localhost:8000";
     this.API_BASE_URL = "https://employee-hierarchy-backend.vercel.app";
   }
 

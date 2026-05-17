@@ -84,7 +84,10 @@ export default function Hierarchy() {
 
     // Scroll after state update renders the form
     setTimeout(() => {
-      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (formRef.current) {
+        const top = formRef.current.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
     }, 50);
   };
 
