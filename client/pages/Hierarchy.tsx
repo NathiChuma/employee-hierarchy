@@ -9,7 +9,14 @@ import EmployeeDetails from "@/components/EmployeeDetails";
 import DeleteEmployeeDialog from "@/components/DeleteEmployeeDialog";
 
 export default function Hierarchy() {
+
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set(["1"]));
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,7 +25,7 @@ export default function Hierarchy() {
         await api.getEmployees();
       }
 
-      const employees = employeesData;
+      const employees = [...employeesData];
 
       if (employees) {
         setEmployees(employees);
@@ -28,14 +35,6 @@ export default function Hierarchy() {
 
     fetchData();
   }, []);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(
-    new Set(["1"])
-  );
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
 
   const rootEmployees = useMemo(
     () => employees.filter((emp) => !emp.managerId),
@@ -59,23 +58,21 @@ export default function Hierarchy() {
   const handleAddEmployee = async (formData: Employee) => {
     if (editingId) {
       await api.updateEmployee(formData);
-      setEmployees(employeesData);
+      setEmployees([...employeesData]);
       setEditingId(null);
+      setSelectedEmployee(formData);
     } else {
       await api.createEmployee(formData);
-      setEmployees(employeesData);
+      setEmployees([...employeesData]);
     }
     setShowForm(false);
-    setSelectedEmployee(null);
   };
 
   const handleDeleteEmployee = async (id: string) => {
     await api.deleteEmployee(id);
-    setEmployees(employeesData);
+    setEmployees([...employeesData]);
     setSelectedEmployee(null);
   };
-
-  const formRef = useRef<HTMLDivElement>(null);
 
   const handleEditEmployee = (employee: Employee) => {
     setSelectedEmployee(employee);
@@ -289,6 +286,7 @@ export default function Hierarchy() {
                   {editingId ? "Edit Employee" : "Add New Employee"}
                 </h2>
                 <EmployeeForm
+                  key={editingId ?? 'new'}
                   employees={employees}
                   initialData={selectedEmployee}
                   onSubmit={handleAddEmployee}

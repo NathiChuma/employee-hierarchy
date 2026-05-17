@@ -10,6 +10,12 @@ import { api, employeesData } from "../../shared/api";
 export default function Employees() {
 
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterRole, setFilterRole] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,7 +24,7 @@ export default function Employees() {
         await api.getEmployees();
       }
 
-      const employees = employeesData;
+      const employees = [...employeesData];
 
       if (employees) {
         setEmployees(employees);
@@ -28,12 +34,6 @@ export default function Employees() {
 
     fetchData();
   }, []);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterRole, setFilterRole] = useState("");
-  const [showForm, setShowForm] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  const [editingId, setEditingId] = useState<string | null>(null);
 
   const roles = useMemo(() => {
     const uniqueRoles = new Set(employees.map((e) => e.role));
@@ -57,23 +57,21 @@ export default function Employees() {
   const handleAddEmployee = async (formData: Employee) => {
     if (editingId) {
       await api.updateEmployee(formData);
-      setEmployees(employeesData);
+      setEmployees([...employeesData]);
       setEditingId(null);
+      setSelectedEmployee(formData);
     } else {
       await api.createEmployee(formData);
-      setEmployees(employeesData);
+      setEmployees([...employeesData]);
     }
     setShowForm(false);
-    setSelectedEmployee(null);
   };
 
   const handleDeleteEmployee = async (id: string) => {
     await api.deleteEmployee(id);
-    setEmployees(employeesData);
+    setEmployees([...employeesData]);
     setSelectedEmployee(null);
   };
-
-  const formRef = useRef<HTMLDivElement>(null);
 
   const handleEditEmployee = (employee: Employee) => {
     setSelectedEmployee(employee);
@@ -86,7 +84,7 @@ export default function Employees() {
         const top = formRef.current.getBoundingClientRect().top + window.scrollY - 70;
         window.scrollTo({ top, behavior: 'smooth' });
       }
-    }, 50);
+    }, showForm ? 0 : 50);
   };
 
   return (
@@ -171,6 +169,7 @@ export default function Employees() {
                   {editingId ? "Edit Employee" : "Add New Employee"}
                 </h2>
                 <EmployeeForm
+                  key={editingId ?? 'new'}
                   employees={employees}
                   initialData={selectedEmployee}
                   onSubmit={handleAddEmployee}
