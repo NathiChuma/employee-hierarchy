@@ -166,7 +166,10 @@ export default function EmployeeDetails({
       {/* Actions */}
       <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex gap-2">
         <button
-          onClick={() => onEdit(employee)}
+          onClick={() => {
+            onEdit(employee);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
           className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
         >
           <Edit2 className="h-4 w-4" />

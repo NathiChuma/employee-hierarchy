@@ -178,6 +178,7 @@ export default function Hierarchy() {
                     onClick={(e) => {
                       e.stopPropagation();
                       handleEditEmployee(employee);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                     className="p-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:bg-primary/10 rounded-lg transition-colors flex-shrink-0"
                     title="Edit"

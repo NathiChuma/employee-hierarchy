@@ -1,5 +1,3 @@
-import e from "express";
-
 export interface DemoResponse {
   message: string;
 }
