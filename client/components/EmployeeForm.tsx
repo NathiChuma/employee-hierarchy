@@ -265,6 +265,9 @@ export default function EmployeeForm({
             <option value="">No Manager</option>
             {employees
               .filter((emp) => emp.id !== formData.id)
+              .sort((a, b) =>
+                a.firstName.localeCompare(b.firstName) ||
+                a.lastName.localeCompare(b.lastName))
               .map((emp) => (
                 <option key={emp.id} value={emp.id}>
                   {emp.firstName} {emp.lastName} ({emp.employeeNumber})
