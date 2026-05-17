@@ -1,7 +1,3 @@
-export interface DemoResponse {
-  message: string;
-}
-
 export interface Employee {
   id: string;
   firstName: string;
@@ -12,21 +8,6 @@ export interface Employee {
   role: string;
   managerId?: string;
   email?: string;
-}
-
-export interface EmployeeCreateRequest {
-  firstName: string;
-  lastName: string;
-  birthDate: string;
-  employeeNumber: string;
-  salary: number;
-  role: string;
-  managerId?: string;
-  email?: string;
-}
-
-export interface EmployeeUpdateRequest extends Partial<EmployeeCreateRequest> {
-  id: string;
 }
 
 export var employeesData: Employee[] = [];
@@ -123,5 +104,5 @@ class APIClient {
 
 }
 
-// Export a single instance of the EmployeesAPIs class to be used throughout the application
+// Export a single instance of the APIClient class to be used throughout the application
 export const api = new APIClient();
