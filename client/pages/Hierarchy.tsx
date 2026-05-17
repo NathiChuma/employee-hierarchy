@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { Employee } from "@shared/api";
 import { Search, ChevronDown, ChevronRight, Edit2, Trash2  } from "lucide-react";
 import GravatarAvatar from "@/components/GravatarAvatar";
@@ -75,10 +75,17 @@ export default function Hierarchy() {
     setSelectedEmployee(null);
   };
 
+  const formRef = useRef<HTMLDivElement>(null);
+
   const handleEditEmployee = (employee: Employee) => {
     setSelectedEmployee(employee);
     setEditingId(employee.id);
     setShowForm(true);
+
+    // Scroll after state update renders the form
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
 
   const searchMatches = (employee: Employee, term: string) => {
@@ -272,7 +279,9 @@ export default function Hierarchy() {
             </div>
 
             {showForm && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <div
+                ref={formRef}
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   {editingId ? "Edit Employee" : "Add New Employee"}
                 </h2>
