@@ -25,7 +25,6 @@ export default function App() {
             <Route path="/" element={<Index />} />
             <Route path="/employees" element={<Employees />} />
             <Route path="/hierarchy" element={<Hierarchy />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
