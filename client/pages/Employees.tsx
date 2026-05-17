@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Employee } from "@shared/api";
 import { Plus, Search, Filter, Users } from "lucide-react";
 import EmployeeForm from "@/components/EmployeeForm";
@@ -73,10 +73,17 @@ export default function Employees() {
     setSelectedEmployee(null);
   };
 
+  const formRef = useRef<HTMLDivElement>(null);
+
   const handleEditEmployee = (employee: Employee) => {
     setSelectedEmployee(employee);
     setEditingId(employee.id);
     setShowForm(true);
+
+    // Scroll after state update renders the form
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
 
   return (
@@ -154,7 +161,9 @@ export default function Employees() {
 
             {/* Form Section */}
             {showForm && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <div
+                ref={formRef}
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   {editingId ? "Edit Employee" : "Add New Employee"}
                 </h2>

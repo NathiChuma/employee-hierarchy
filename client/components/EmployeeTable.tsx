@@ -192,7 +192,6 @@ export default function EmployeeTable({
                     onClick={(e) => {
                       e.stopPropagation();
                       onEditEmployee(employee);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                     className="p-2 text-gray-600 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
                     title="Edit"
